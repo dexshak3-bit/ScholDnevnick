@@ -414,7 +414,7 @@ exports.deleteAdmin = async function(req, res) {
 
 exports.listUsers = async (req, res) => {
     try {
-        const users = await User.findAll({ attributes: ['id', 'email', 'first_name', 'surname', 'patronymic'] });
+        const users = await User.findAll({ attributes: ['id', 'email', 'first_name', 'surname', 'patronymic', 'role'] });
         res.json(users);
     } catch(err) {
         console.error(err)
