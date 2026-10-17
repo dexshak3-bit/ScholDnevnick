@@ -156,7 +156,11 @@ exports.deleteStudent = async function(req, res) {
         if(!student){
             return res.status(404).json({ message: "Не найдено" });
         }
-        await student.destroy();
+        await sequelize.transaction(async(t) => {
+            const user = await User.findByPk(student.user_id, {transaction: t});
+            await user.destroy({transaction: t});
+            await student.destroy({transaction: t});
+        });
         res.status(200).json({ message: "Удалено" });
     } catch(err) {
         console.error(err)
