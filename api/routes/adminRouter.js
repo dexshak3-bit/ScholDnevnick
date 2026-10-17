@@ -11,9 +11,13 @@ adminRouter.post('/create-student', auth, authorize('Admin'), adminController.cr
 
 adminRouter.put('/update-student/:id', auth, authorize('Admin'), adminController.updateStudent);
 
+adminRouter.delete('/delete-student/:id', auth, authorize('Admin'), adminController.deleteStudent);
+
 adminRouter.post('/create-teacher', auth, authorize('Admin'), adminController.createTeacher);
 
 adminRouter.put('/update-teacher/:id', auth, authorize('Admin'), adminController.updateTeacher);
+
+adminRouter.delete('/delete-teacher/:id', auth, authorize('Admin'), adminController.deleteTeacher);
 
 adminRouter.post('/create-admin', auth, authorize('Admin'), adminController.createAdmin);
 

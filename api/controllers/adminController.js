@@ -150,6 +150,19 @@ exports.updateStudent = async function(req, res) {
     }
 }
 
+exports.deleteStudent = async function(req, res) {
+    try {
+        const student = await Student.findByPk(req.params.id);
+        if(!student){
+            return res.status(404).json({ message: "Не найдено" });
+        }
+        await student.destroy();
+        res.status(200).json({ message: "Удалено" });
+    } catch(err) {
+        console.error(err)
+        res.status(500).json({ message: err.message })
+    }
+}
 
 exports.createTeacher = async function(req, res) {
     try {
@@ -271,6 +284,20 @@ exports.updateTeacher = async function(req, res) {
             await teacher.save();
         }
         res.json(teacher);
+    } catch(err) {
+        console.error(err)
+        res.status(500).json({ message: err.message })
+    }
+}
+
+exports.deleteTeacher = async function(req, res) {
+    try {
+        const teacher = await Teacher.findByPk(req.params.id);
+        if(!teacher){
+            return res.status(404).json({ message: "Не найдено" });
+        }
+        await teacher.destroy();
+        res.status(200).json({ message: "Удалено" });
     } catch(err) {
         console.error(err)
         res.status(500).json({ message: err.message })
@@ -485,13 +512,11 @@ exports.updateSchedule = async function(req, res) {
 
 exports.deleteSchedule = async function(req, res) {
     try {
-        const deletedCount = await sequelize.transaction(async(t) => {
-            await Grade.destroy({where: {schedule_id: req.params.id}, transaction: t});
-            return await Schedule.destroy({where: {id: req.params.id}, transaction: t});
-        });
-        if(deletedCount === 0) {
+        const schedule = await Schedule.findByPk(req.params.id);
+        if(!schedule){
             return res.status(404).json({ message: "Не найдено" });
         }
+        await schedule.destroy();
         res.status(200).json({ message: "Удалено" });
     } catch(err) {
         console.error(err)
@@ -553,13 +578,11 @@ exports.updateClass = async function(req, res) {
 
 exports.deleteClass = async function(req, res) {
     try {
-        const deletedCount = await sequelize.transaction(async(t) => {
-            await Student.destroy({where: {class_id: req.params.id}, transaction: t});
-            return await Class.destroy({where: {id: req.params.id}, transaction: t});
-        });
-        if(deletedCount === 0) {
+        const s_class = await Class.findByPk(req.params.id);
+        if(!s_class){
             return res.status(404).json({ message: "Не найдено" });
         }
+        await s_class.destroy();
         res.status(200).json({ message: "Удалено" });
     } catch(err) {
         console.error(err)
@@ -620,14 +643,11 @@ exports.updateSubject = async function(req, res) {
 
 exports.deleteSubject = async function(req, res) {
     try {
-        const deletedCount = await sequelize.transaction(async(t) => {
-            await Teacher.destroy({where: {subject_id: req.params.id}, transaction: t});
-            await Schedule.destroy({where: {subject_id: req.params.id}, transaction: t});
-            return await Subject.destroy({where: {id: req.params.id}, transaction: t});
-        });
-        if(deletedCount === 0) {
+        const subject = await Subject.findByPk(req.params.id);
+        if(!subject){
             return res.status(404).json({ message: "Не найдено" });
         }
+        await subject.destroy();
         res.status(200).json({ message: "Удалено" });
     } catch(err) {
         console.error(err)
