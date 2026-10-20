@@ -157,9 +157,10 @@ exports.deleteStudent = async function(req, res) {
             return res.status(404).json({ message: "Не найдено" });
         }
         await sequelize.transaction(async(t) => {
-            const user = await User.findByPk(student.user_id, {transaction: t});
-            await user.destroy({transaction: t});
+            const userId = student.user_id;
             await student.destroy({transaction: t});
+            const user = await User.findByPk(userId, {transaction: t});
+            await user.destroy({transaction: t});
         });
         res.status(200).json({ message: "Удалено" });
     } catch(err) {
@@ -300,7 +301,12 @@ exports.deleteTeacher = async function(req, res) {
         if(!teacher){
             return res.status(404).json({ message: "Не найдено" });
         }
-        await teacher.destroy();
+        await sequelize.transaction(async(t) => {
+            const userId = teacher.user_id;
+            await teacher.destroy({transaction: t});
+            const user = await User.findByPk(userId, {transaction: t});
+            await user.destroy({transaction: t});        
+        });
         res.status(200).json({ message: "Удалено" });
     } catch(err) {
         console.error(err)
