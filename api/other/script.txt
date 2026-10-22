@@ -2,5 +2,33 @@ docker exec -it api-app-1 node -e "console.log(require('bcryptjs').hashSync('roo
 docker exec -it api-postgresdb-1 psql -U postgres -d db_school -c "SELECT * FROM USERS"
 root - $2b$10$Wdm/qsi5jeZTw63Gb1mLk.7ru/T0Izzh27uTfLei6Q/ejlff8E6Ae
 
-docker exec -it api-postgresdb-1 psql -U postgres -d db_school -c "INSERT INTO users (email, password_hash, role, first_name, surname, created_at, updated_at) VALUES ('root@gmail.com', '$2b$10$Wdm/qsi5jeZTw63Gb1mLk.7ru/T0Izzh27uTfLei6Q/ejlff8E6Ae', 'Admin', 'Иван', 'Иванов', now(), now())"
+docker exec -it api-postgresdb-1 psql -U postgres -d db_school -c "INSERT INTO users (email, password_hash, role, first_name, surname, created_at, updated_at) 
+VALUES (
+    'root@gmail.com', 
+    '\$2b\$10\$Wdm/qsi5jeZTw63Gb1mLk.7ru/T0Izzh27uTfLei6Q/ejlff8E6Ae', 
+    'Admin', 
+    'Иван', 
+    'Иванов', 
+    now(), 
+    now()
+);
+"
 
+
+POST - http://localhost:5012/api/auth/login
+
+Body: {
+    "email": "root@gmail.com",
+    "password": "root"
+}
+
+
+
+
+
+
+http://localhost:5012/api/get-students
+
+
+Headers:
+Authorization  -  Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
