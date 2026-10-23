@@ -2,6 +2,7 @@ require('dotenv').config()
 const express = require('express');
 const sequelize = require('./models/index').sequelize;
 const { rateLimit } = require('express-rate-limit');
+const cors = require('cors');
 
 const limiter = rateLimit({
     windowMs: 15*60 * 1000,
@@ -25,6 +26,12 @@ const classroomRouter = require('./routes/classroomRouter');
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(cors({
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
+}));
 app.use('/api/admin', adminRouter);
 app.use('/api/auth', limiter,  authRouter);
 app.use('/api/grades', gradeRouter);
