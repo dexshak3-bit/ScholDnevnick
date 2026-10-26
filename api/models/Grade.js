@@ -36,6 +36,7 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     sequelize,
     tableName: 'grades',
+    schema: 'public',
     timestamps: true,
     indexes: [
       {

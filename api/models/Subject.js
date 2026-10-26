@@ -19,6 +19,7 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     sequelize,
     tableName: 'subjects',
+    schema: 'public',
     timestamps: false,
     indexes: [
       {

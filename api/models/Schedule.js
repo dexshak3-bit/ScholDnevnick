@@ -40,8 +40,7 @@ module.exports = function(sequelize, DataTypes) {
       references: {
         model: 'classes',
         key: 'id'
-      },
-      unique: "schedules_date_lesson_number_class_id_key"
+      }
     },
     classroom_id: {
       type: DataTypes.INTEGER,
@@ -49,12 +48,12 @@ module.exports = function(sequelize, DataTypes) {
       references: {
         model: 'classrooms',
         key: 'id'
-      },
-      unique: "schedules_date_lesson_number_classroom_id_key"
+      }
     }
   }, {
     sequelize,
     tableName: 'schedules',
+    schema: 'public',
     timestamps: false,
     indexes: [
       {

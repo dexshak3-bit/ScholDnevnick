@@ -1,4 +1,4 @@
-Запуск: docker compose up --build
+Запуск api: docker compose up --build
 
 docker exec -it api-app-1 node -e "console.log(require('bcryptjs').hashSync('root', 10))"
 docker exec -it api-postgresdb-1 psql -U postgres -d db_school -c "SELECT * FROM USERS"
@@ -34,3 +34,8 @@ http://localhost:5012/api/get-students
 
 Headers:
 Authorization  -  Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+
+
+
+npx sequelize-auto -h localhost -d db_school -u postgres -x 1234 -p 5433 -o ./models -e postgres --singularize --caseModel p --caseFile p

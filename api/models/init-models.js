@@ -21,11 +21,11 @@ function initModels(sequelize) {
   var User = _User(sequelize, DataTypes);
 
   Schedule.belongsTo(Class, { as: "class", foreignKey: "class_id"});
-  Class.hasOne(Schedule, { as: "schedule", foreignKey: "class_id"});
+  Class.hasMany(Schedule, { as: "schedules", foreignKey: "class_id"});
   Student.belongsTo(Class, { as: "class", foreignKey: "class_id"});
   Class.hasMany(Student, { as: "students", foreignKey: "class_id"});
   Schedule.belongsTo(Classroom, { as: "classroom", foreignKey: "classroom_id"});
-  Classroom.hasOne(Schedule, { as: "schedule", foreignKey: "classroom_id"});
+  Classroom.hasMany(Schedule, { as: "schedules", foreignKey: "classroom_id"});
   Grade.belongsTo(Schedule, { as: "schedule", foreignKey: "schedule_id"});
   Schedule.hasMany(Grade, { as: "grades", foreignKey: "schedule_id"});
   Grade.belongsTo(Student, { as: "student", foreignKey: "student_id"});
