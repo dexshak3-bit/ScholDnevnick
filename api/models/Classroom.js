@@ -15,6 +15,7 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     sequelize,
     tableName: 'classrooms',
+    schema: 'public',
     timestamps: false,
     indexes: [
       {

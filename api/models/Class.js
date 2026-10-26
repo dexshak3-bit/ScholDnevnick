@@ -9,8 +9,7 @@ module.exports = function(sequelize, DataTypes) {
     },
     name: {
       type: DataTypes.STRING(50),
-      allowNull: false,
-      unique: "classes_name_key"
+      allowNull: false
     },
     year: {
       type: DataTypes.INTEGER,
@@ -19,15 +18,9 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     sequelize,
     tableName: 'classes',
+    schema: 'public',
     timestamps: false,
     indexes: [
-      {
-        name: "classes_name_key",
-        unique: true,
-        fields: [
-          { name: "name" },
-        ]
-      },
       {
         name: "classes_pkey",
         unique: true,
