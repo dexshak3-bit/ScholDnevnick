@@ -551,10 +551,12 @@ exports.updateSchedule = async function(req, res) {
             const below = lessonNumbers.filter(s => s < lesson_number).pop()
             const above = lessonNumbers.find(s => s > lesson_number)
 
-            if(above && above - lesson_number > 2)
+            if(above && above - lesson_number > 2) {
                 return res.status(400).json({ message: "Разница между уроками больше 2" });
-            if(below && lesson_number - below > 2)
+            }
+            if(below && lesson_number - below > 2) {
                 return res.status(400).json({ message: "Разница между уроками больше 2" });
+            }
         }
 
         const lesson = await schedule.update({ date, lesson_number, subject_id, teacher_id, class_id, classroom_id  })
