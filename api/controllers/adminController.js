@@ -484,8 +484,8 @@ exports.createSchedule = async function(req, res) {
             return res.status(400).json({ message: "Дата должна быть в будущем" });
         if(!date || !lesson_number || !subject || !teacher || !s_class || !classroom)
             return res.status(404).json({ message: "Не найдено" });
-        // if(teacher.subject_id != subject.id)
-        //     return res.status(400).json({ message: "Предмет не учителя" });
+        if(teacher.subject_id != subject.id)
+            return res.status(400).json({ message: "Предмет не учителя" });
         if(lesson_number < 1 || lesson_number > 8) {
             return res.status(400).json({ message: "Неправильный номер урока" });
         }
@@ -538,10 +538,11 @@ exports.updateSchedule = async function(req, res) {
             return res.status(400).json({ message: "Дата должна быть в будущем" });
         if(!date || !lesson_number || !subject || !teacher || !s_class || !classroom)
             return res.status(404).json({ message: "Не найдено" });
-
-        if(!date || !lesson_number || !subject || !teacher || !s_class || !classroom)
-            return res.status(404).json({ message: "Не найдено" });
-
+        if(teacher.subject_id != subject.id)
+            return res.status(400).json({ message: "Предмет не учителя" });
+        if(lesson_number < 1 || lesson_number > 8) {
+            return res.status(400).json({ message: "Неправильный номер урока" });
+        }
         const dateSchedules = await Schedule.findAll(
             {where: {date: date, class_id: s_class.id}}
         );
