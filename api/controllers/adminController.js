@@ -480,13 +480,34 @@ exports.createSchedule = async function(req, res) {
         curr_date.setHours(0, 0, 0, 0);
         const targetDate = new Date(date);
         targetDate.setHours(0, 0, 0, 0);
-        if(targetDate.getTime() < curr_date.getTime())
-            return res.status(400).json({ message: "Дата должна быть текущая или в будущем" });
-
+        if(targetDate.getTime() <= curr_date.getTime())
+            return res.status(400).json({ message: "Дата должна быть в будущем" });
         if(!date || !lesson_number || !subject || !teacher || !s_class || !classroom)
             return res.status(404).json({ message: "Не найдено" });
-        if(lesson_number < 1 || lesson_number > 8)
+        // if(teacher.subject_id != subject.id)
+        //     return res.status(400).json({ message: "Предмет не учителя" });
+        if(lesson_number < 1 || lesson_number > 8) {
             return res.status(400).json({ message: "Неправильный номер урока" });
+        }
+        if(targetDate.getDay() === 0) {
+            return res.status(400).json({ message: "По воскресеньям нельзя добавлять уроки" });
+        }
+
+        const dateSchedules = await Schedule.findAll(
+            {where: {date: date, class_id: s_class.id}}
+        );
+        if(dateSchedules.length > 0) {
+            const lessonNumbers = dateSchedules.map(s => s.lesson_number).sort((a, b) => a-b);
+            if(lessonNumbers.includes(lesson_number))
+                return res.status(400).json({ message: "Урок с таким номером уже есть" });
+            const below = lessonNumbers.filter(s => s < lesson_number).pop();
+            const above = lessonNumbers.find(s => s > lesson_number);
+
+            if(above && above - lesson_number > 2)
+                return res.status(400).json({ message: "Разница между уроками больше 2" });
+            if(below && lesson_number - below > 2)
+                return res.status(400).json({ message: "Разница между уроками больше 2" });
+        }
 
         const lesson = await Schedule.create({ date, lesson_number, subject_id, teacher_id, class_id, classroom_id  })
         res.json(lesson);
@@ -509,8 +530,31 @@ exports.updateSchedule = async function(req, res) {
         const s_class = await Class.findByPk(class_id);
         const classroom = await Classroom.findByPk(classroom_id);
 
+        const curr_date = new Date((await SchoolSetting.findOne()).curr_date);
+        curr_date.setHours(0, 0, 0, 0);
+        const targetDate = new Date(date);
+        targetDate.setHours(0, 0, 0, 0);
+        if(targetDate.getTime() <= curr_date.getTime())
+            return res.status(400).json({ message: "Дата должна быть в будущем" });
         if(!date || !lesson_number || !subject || !teacher || !s_class || !classroom)
             return res.status(404).json({ message: "Не найдено" });
+
+        if(!date || !lesson_number || !subject || !teacher || !s_class || !classroom)
+            return res.status(404).json({ message: "Не найдено" });
+
+        const dateSchedules = await Schedule.findAll(
+            {where: {date: date, class_id: s_class.id}}
+        );
+        if(dateSchedules.length > 0) {
+            const lessonNumbers = dateSchedules.map(s => s.lesson_number).sort((a, b) => a-b);
+            const below = lessonNumbers.filter(s => s < lesson_number).pop()
+            const above = lessonNumbers.find(s => s > lesson_number)
+
+            if(above && above - lesson_number > 2)
+                return res.status(400).json({ message: "Разница между уроками больше 2" });
+            if(below && lesson_number - below > 2)
+                return res.status(400).json({ message: "Разница между уроками больше 2" });
+        }
 
         const lesson = await schedule.update({ date, lesson_number, subject_id, teacher_id, class_id, classroom_id  })
         res.json(lesson);
@@ -526,6 +570,14 @@ exports.deleteSchedule = async function(req, res) {
         if(!schedule){
             return res.status(404).json({ message: "Не найдено" });
         }
+        const curr_date = new Date((await SchoolSetting.findOne()).curr_date);
+        curr_date.setHours(0, 0, 0, 0);
+        const lessonDate = new Date(schedule.date);
+        lessonDate.setHours(0, 0, 0, 0);
+        if(lessonDate <= curr_date) {
+            return res.status(404).json({ message: "Нельзя удалять прошлый или сегодняшний урок" });
+        }
+
         await schedule.destroy();
         res.status(200).json({ message: "Удалено" });
     } catch(err) {

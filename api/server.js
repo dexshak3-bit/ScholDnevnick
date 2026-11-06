@@ -57,6 +57,7 @@ async function start() {
             console.log('Server running on port', process.env.PORT || 5012);
         });
         server.on('error', err => { console.error(err); process.exit(1); });
+        
     } catch(err) {
         console.error(err);
         process.exit(1);
