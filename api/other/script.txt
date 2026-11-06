@@ -39,3 +39,9 @@ Authorization  -  Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 
 
 npx sequelize-auto -h localhost -d db_school -u postgres -x 1234 -p 5433 -o ./models -e postgres --singularize --caseModel p --caseFile p
+
+docker exec -t api-postgresdb-1 pg_dump -U postgres --column-inserts db_school > dbscriptt4.sql
+
+docker exec -i api-postgresdb-1 psql -U postgres -d db_school < db_script_continue.sql
+
+git log --oneline --graph --all --decorate
